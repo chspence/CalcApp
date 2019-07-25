@@ -1,3 +1,3 @@
 Calculator web app
 
-1.* - AngularJS 8
+1.* - Angular 8
