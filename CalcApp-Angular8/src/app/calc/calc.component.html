@@ -1,75 +1,75 @@
 <div class="container" style="width:20rem">
     <div class="row m-auto">
-        <input type="text" class="form-control col-12 text-right">
+        <input type="text" class="form-control col-12 text-right" disabled>
     </div>
     <div class="row m-auto pt-1">
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block"><</button>
+            <button id="clear" type="button" class="btn btn-secondary btn-block" (click)="clear()">c</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">e</button>
+            <button id="negate" type="button" class="btn btn-secondary btn-block" (click)="negate()">±</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">c</button>
+            <button id="squareroot" type="button" class="btn btn-secondary btn-block" (click)="squareroot()">√</button>
         </div>
         <div class="col-3 p-0">
-            <button type="button" class="btn btn-secondary btn-block">±</button>
-        </div>
-    </div>
-    <div class="row m-auto pt-1">
-        <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">7</button>
-        </div>
-        <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">8</button>
-        </div>
-        <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">9</button>
-        </div>
-        <div class="col-3 p-0">
-            <button type="button" class="btn btn-secondary btn-block">/</button>
+            <button id="square" type="button" class="btn btn-secondary btn-block" (click)="square()">x<sup>2</sup></button>
         </div>
     </div>
     <div class="row m-auto pt-1">
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">4</button>
+            <button id="seven" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(7)">7</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">5</button>
+            <button id="eight" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(8)">8</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">6</button>
+            <button id="nine" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(9)">9</button>
         </div>
         <div class="col-3 p-0">
-            <button type="button" class="btn btn-secondary btn-block">x</button>
+            <button id="divide" type="button" class="btn btn-secondary btn-block" (click)="setOperator(div)">/</button>
         </div>
     </div>
     <div class="row m-auto pt-1">
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">1</button>
+            <button id="four" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(4)">4</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">2</button>
+            <button id="five" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(5)">5</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">3</button>
+            <button id="six" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(6)">6</button>
         </div>
         <div class="col-3 p-0">
-            <button type="button" class="btn btn-secondary btn-block">-</button>
+            <button id="multiply" type="button" class="btn btn-secondary btn-block" (click)="setOperator(mul)">x</button>
         </div>
     </div>
     <div class="row m-auto pt-1">
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">0</button>
+            <button id="one" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(1)">1</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-secondary btn-block">.</button>
+            <button id="two" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(2)">2</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button type="button" class="btn btn-outline-primary btn-block">=</button>
+            <button id="three" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(3)">3</button>
         </div>
         <div class="col-3 p-0">
-            <button type="button" class="btn btn-secondary btn-block">+</button>
+            <button id="minus" type="button" class="btn btn-secondary btn-block" (click)="setOperator(minus)">-</button>
+        </div>
+    </div>
+    <div class="row m-auto pt-1">
+        <div class="col-3 p-0 pr-1">
+            <button id="zero" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(0)">0</button>
+        </div>
+        <div class="col-3 p-0 pr-1">
+            <button id="decimal" type="button" class="btn btn-secondary btn-block" (click)="setDecimal()">.</button>
+        </div>
+        <div class="col-3 p-0 pr-1">
+            <button id="equals" type="button" class="btn btn-outline-primary btn-block" (click)="evaluate()">=</button>
+        </div>
+        <div class="col-3 p-0">
+            <button id="plus" type="button" class="btn btn-secondary btn-block" (click)="setOperator(plus)">+</button>
         </div>
     </div>
 </div>
