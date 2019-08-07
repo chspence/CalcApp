@@ -1,13 +1,13 @@
 <div class="container" style="width:20rem">
     <div class="m-auto pt-1 px-2 text-right overflow-hidden" style="border:1px solid #ccc;">
         <div class="float-right">
-            <h5>{{leftValueDisplay}}{{operatorDisplay}}</h5>
-            <h3>{{rightValueDisplay}}</h3>
+            <h5 class = "empty">{{leftValueDisplay}}{{operatorDisplay}}</h5>
+            <h3 class = "empty">{{rightValueDisplay}}</h3>
         </div>
     </div>
     <div class="row m-auto pt-1">
         <div class="col-3 p-0 pr-1">
-            <button id="clear" type="button" class="btn btn-secondary btn-block" (click)="clear()">c</button>
+            <button id="clear" type="button" class="btn btn-secondary btn-block" (click)="clear(true)">c</button>
         </div>
         <div class="col-3 p-0 pr-1">
             <button id="negate" type="button" class="btn btn-secondary btn-block" (click)="negate()">±</button>
@@ -30,7 +30,7 @@
             <button id="nine" type="button" class="btn btn-secondary btn-block" (click)="appendDigit(9)">9</button>
         </div>
         <div class="col-3 p-0">
-            <button id="divide" type="button" class="btn btn-secondary btn-block" (click)="setNextOperator(4)">/</button>
+            <button id="divide" type="button" class="btn btn-secondary btn-block" (click)="setNextOperator(4)">÷</button>
         </div>
     </div>
     <div class="row m-auto pt-1">
@@ -69,7 +69,7 @@
             <button id="decimal" type="button" class="btn btn-secondary btn-block" (click)="setDecimal()">.</button>
         </div>
         <div class="col-3 p-0 pr-1">
-            <button id="equals" type="button" class="btn btn-outline-primary btn-block" (click)="evaluate(true)">=</button>
+            <button id="equals" type="button" class="btn btn-outline-primary btn-block" (click)="evaluate()">=</button>
         </div>
         <div class="col-3 p-0">
             <button id="plus" type="button" class="btn btn-secondary btn-block" (click)="setNextOperator(1)">+</button>

@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import Big from 'big.js';
-import { debug } from 'util';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 enum Operator {
   "None" = 0, "Plus" = 1, "Minus" = 2, "Multiply" = 3, "Divide" = 4
@@ -19,10 +19,13 @@ export class CalcComponent implements OnInit {
   private _leftValue: Big;
   private _operator: Operator;
   private _rightValue: Big;
+  private _rightValueDecimalSet: boolean;
+  private _rightValueDirty: boolean;
 
   leftValueDisplay: string;
   operatorDisplay: string;
   rightValueDisplay: string;
+  rightValueDisplayColor: string;
 
   KeyCodeToButtonId: Map<string, string>;
 
@@ -37,10 +40,7 @@ export class CalcComponent implements OnInit {
     Big.NE = -100000;
 
     //Initialize variables
-    this._leftValue = new Big(0);
-    this._operator = Operator.None;
-    this._rightValue = new Big(0);
-    this.updateDisplayValues(false);
+    this.clear(true);
 
     //Initialize KeyCode to Button map
     this.KeyCodeToButtonId = new Map<string, string>([
@@ -63,6 +63,7 @@ export class CalcComponent implements OnInit {
       ["s", "square"],
       ["^", "square"],
       ["n", "negate"],
+      ["=", "equals"],
       ["Enter", "equals"],
       ["Delete", "clear"],
       ["Backspace", "clear"]
@@ -94,13 +95,19 @@ export class CalcComponent implements OnInit {
       return;
     }
 
-    //Shift rightValue one decimal place left (dependig on current value's sign)
-    this._rightValue.e += 1;
+    //Retain original e of right value to replace at the end if necessary
+    let originalE: number = this._rightValue.e;
 
-    // console.log("rightValue after e change: " + this._rightValue);
-
+    //Shift rightValue one decimal place left for adding purposes
+    this._rightValue.e = this._rightValue.c.length;
     //Append digit to rightValue (depending on sign, either add or subtract the additional digit)
     this._rightValue = this._rightValue.s == 1 ? this._rightValue.add(value) : this._rightValue.minus(value);
+    //Reset and then shift opposite if decimal has been set
+    if (this._rightValueDecimalSet)
+      this._rightValue.e = originalE;
+
+    //Mark right value as dirty 
+    this._rightValueDirty = true;
 
     this.updateDisplayValues(false);
   }
@@ -113,7 +120,7 @@ export class CalcComponent implements OnInit {
       console.log("failed setOperator");
       return;
     }
-    
+
     //Evaluate current expression before changing stored operator (don't reset and update)
     this.evaluate();
 
@@ -125,6 +132,8 @@ export class CalcComponent implements OnInit {
 
   setDecimal() {
     console.log("setDecimal");
+
+    this._rightValueDecimalSet = true;
   }
 
   negate() {
@@ -138,10 +147,14 @@ export class CalcComponent implements OnInit {
 
   square() {
     console.log("square");
+
+    //TODO
   }
 
   squareroot() {
     console.log("squareroot");
+
+    //TODO
   }
 
   evaluate() {
@@ -151,27 +164,27 @@ export class CalcComponent implements OnInit {
     switch (this._operator) {
       case Operator.Plus: {
         console.log("evaluate plus");
-        this._leftValue = this._leftValue.add(this._rightValue);
+        this._leftValue = this._leftValue.add(this._rightValueDirty ? this._rightValue : this._leftValue);
         break;
       }
       case Operator.Minus: {
         console.log("evaluate minus");
-        this._leftValue = this._leftValue.minus(this._rightValue);
+        this._leftValue = this._leftValue.minus(this._rightValueDirty ? this._rightValue : this._leftValue);
         break;
       }
       case Operator.Multiply: {
         console.log("evaluate mul");
-        this._leftValue = this._leftValue.mul(this._rightValue);
+        this._leftValue = this._leftValue.mul(this._rightValueDirty ? this._rightValue : this._leftValue);
         break;
       }
       case Operator.Divide: {
         console.log("evaluate div");
-        this._leftValue = this._leftValue.div(this._rightValue);
+        this._leftValue = this._leftValue.div(this._rightValueDirty ? this._rightValue : this._leftValue);
         break;
       }
       case Operator.None: {
         console.log("evaluate none");
-        this._leftValue = Big(this._rightValue);
+        this._leftValue = Big(this._rightValueDirty ? this._rightValue : this._leftValue);
         break;
       }
       default: {
@@ -180,32 +193,36 @@ export class CalcComponent implements OnInit {
       }
     }
 
-      this._operator = Operator.None
-      this._rightValue = Big(0);
+    //Clear, but retain left value
+    this.clear(false);
 
-      this.updateDisplayValues(false);
+    this.updateDisplayValues(false);
   }
 
-  clear() {
+  clear(clearLeftValue: Boolean) {
     console.log("clear");
 
-    this._leftValue = Big(0);
+    if (clearLeftValue)
+      this._leftValue = Big(0);
+
     this._operator = Operator.None
     this._rightValue = Big(0);
+    this._rightValueDecimalSet = false;
+    this._rightValueDirty = false;
 
     this.updateDisplayValues(false);
   }
 
   private updateDisplayValues(rightAsPossibleExponent: boolean) {
     //Left Value (always uses exponent format when possible)
-    if(!this._leftValue.eq(0) || this._operator != Operator.None){
+    if (!this._leftValue.eq(0) || this._operator != Operator.None) {
       this.leftValueDisplay = this.getExponentialFormattedValue(this._leftValue);
-    }else{
-      this.leftValueDisplay = "-";
+    } else {
+      this.leftValueDisplay = "";
     }
 
     //Operator
-    switch(this._operator){
+    switch (this._operator) {
       case Operator.Plus: {
         this.operatorDisplay = " +";
         break;
@@ -230,10 +247,13 @@ export class CalcComponent implements OnInit {
 
     //Right Value
     if (rightAsPossibleExponent) {
-      this.rightValueDisplay = this.getExponentialFormattedValue(this._rightValue);
+      this.rightValueDisplay = this.getExponentialFormattedValue(this._rightValueDirty ? this._rightValue : this._leftValue);
     } else {
-      this.rightValueDisplay = this._rightValue.toString();
+      this.rightValueDisplay = this._rightValueDirty ? this._rightValue.toString() : this._leftValue.toString();
     }
+
+    //Right Value Style
+    // this.rightValueDisplayColor = this._rightValueDirty ? "#000" : "#ccc"
   }
 
   private getExponentialFormattedValue(value: Big): string {

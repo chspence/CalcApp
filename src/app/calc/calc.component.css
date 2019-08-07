@@ -11,3 +11,7 @@
     background-color: #8c6cc6;
     border-color: #8563c2;
 }
+
+.empty:after{
+    content: '\200b';
+}
